@@ -11,12 +11,27 @@ export class TrophyWindow extends Application {
     }
 
     getData() {
+        const users = Object.fromEntries(game.users.contents.map(u => [u.id, u.name])); // Convertit en objet clé/valeur
+    
+        let trophies = game.settings.get("GloryForge", "trophies") || [];
+    
+        // Ajoute les noms des joueurs aux trophées débloqués
+        trophies = trophies.map(trophy => {
+            return {
+                ...trophy,
+                awardedToNames: trophy.awardedTo.map(playerId => users[playerId] || "Inconnu") // Récupère les noms
+            };
+        });
+    
         return {
             isGM: game.user.isGM,
-            trophies: game.settings.get("GloryForge", "trophies") || []
+            userId: game.user.id,
+            trophies,
+            users: game.users.filter(u => u.active), // Liste des joueurs actifs
+            userNames: users // Liste des noms {id: "Nom"}
         };
     }
-
+    
     activateListeners(html) {
         super.activateListeners(html);
 
@@ -38,6 +53,25 @@ export class TrophyWindow extends Application {
             await game.GloryForge.TrophySystem.addTrophy(title, description, image, grade, hidden, hideDescription);
             this.render(); // Recharge la fenÃªtre pour afficher le nouveau trophÃ©e
         });
+
+        //Gestion pour attribution du trophÃ©e
+        html.find(".award-trophy-btn").on("click", async (event) => {
+            event.preventDefault();
+            
+            const trophyId = event.currentTarget.dataset.id;
+            const playerSelect = html.find(`#award-player-${trophyId}`);
+            const playerId = playerSelect.val();
+        
+            if (!playerId || !trophyId) {
+                ui.notifications.warn("Veuillez sÃ©lectionner un joueur.");
+                return;
+            }
+        
+            await game.GloryForge.TrophySystem.awardTrophy(playerId, trophyId);
+            this.render(); // Recharge la fenÃªtre aprÃ¨s attribution
+        });
+        
+        
 
         html.find(".delete-trophy-btn").on("click", async (event) => {
             event.preventDefault();

@@ -124,5 +124,13 @@ button {
     color: #bbb;
 }
 
+.awarded-players {
+    font-size: 12px;
+    font-style: italic;
+    color: #00ff00; /* Vert pour montrer que c'est débloqué */
+    margin-top: 5px;
+}
+
+
 
 
