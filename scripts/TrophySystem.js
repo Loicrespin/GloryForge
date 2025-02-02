@@ -20,7 +20,7 @@ export class TrophySystem {
     }
 
     //Ajout d'un trophée
-    static async addTrophy(title, description, image, grade) {
+    static async addTrophy(title, description, image, grade, hidden = false, hideDescription = false) {
         if (!game.user.isGM) return;
         
         let newTrophy = {
@@ -29,6 +29,8 @@ export class TrophySystem {
             description,
             image,
             grade,
+            hidden, // Trophée caché ?
+            hideDescription, // Cacher uniquement la description ?
             awardedTo: []
         };
     
@@ -47,15 +49,27 @@ export class TrophySystem {
         await game.settings.set("GloryForge", "trophies", this.trophies);
     }    
 
-    static async awardTrophy(playerId, trophyTitle) {
+    //Attribuer un trophée
+    static async awardTrophy(playerId, trophyId) {
         if (!game.user.isGM) return;
-        let trophy = this.trophies.find(t => t.title === trophyTitle);
-        if (trophy && !trophy.awardedTo.includes(playerId)) {
-            trophy.awardedTo.push(playerId);
-            await game.settings.set("GloryForge", "trophies", this.trophies);
-            this.notifyPlayer(playerId, trophy);
+    
+        let trophies = game.settings.get("GloryForge", "trophies") || [];
+        let trophy = trophies.find(t => t.id === trophyId);
+    
+        if (!trophy) {
+            ui.notifications.error("Trophée introuvable !");
+            return;
         }
-    }
+    
+        // Vérifier si le joueur a déjà ce trophée
+        if (!trophy.awardedTo.includes(playerId)) {
+            trophy.awardedTo.push(playerId);
+            await game.settings.set("GloryForge", "trophies", trophies);
+            ui.notifications.info(`Le joueur ${game.users.get(playerId)?.name} a reçu le trophée "${trophy.title}" !`);
+        } else {
+            ui.notifications.warn("Ce joueur possède déjà ce trophée.");
+        }
+    }    
 
     static notifyPlayer(playerId, trophy) {
         let player = game.users.get(playerId);
