@@ -20,7 +20,7 @@ export class TrophySystem {
     }
 
     //Ajout d'un trophée
-    static async addTrophy(title, description, image, grade) {
+    static async addTrophy(title, description, image, grade, hidden = false, hideDescription = false) {
         if (!game.user.isGM) return;
         
         let newTrophy = {
@@ -29,6 +29,8 @@ export class TrophySystem {
             description,
             image,
             grade,
+            hidden, // Trophée caché ?
+            hideDescription, // Cacher uniquement la description ?
             awardedTo: []
         };
     

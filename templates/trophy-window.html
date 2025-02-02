@@ -24,21 +24,64 @@
                 <option value="Platine">Platine</option>
             </select>
         </div>
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="trophy-hidden">
+            <label for="trophy-hidden">Trophée caché</label>
+        </div>
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="trophy-hide-description">
+            <label for="trophy-hide-description">Cacher la description</label>
+        </div>
+            
         <button id="add-trophy-btn">Ajouter</button>
     {{/if}}
 
     <h2 class="title">Liste des Trophées</h2>
     <div class="trophy-grid">
         {{#each trophies}}
-            <div class="trophy {{this.grade}}">
-                <img src="{{this.image}}" alt="{{this.title}}" />
-                <h3>{{this.title}}</h3>
-                <p>{{this.description}}</p>
+            <div class="trophy {{this.grade}} {{#if this.hidden}}hidden-trophy{{/if}}">
+                <img src="{{this.image}}" alt="{{this.title}}" class="{{#if this.hidden}}blurred{{/if}}" />
+                
+                <h3 class="{{#if this.hidden}}gm-visible{{/if}}">
+                    {{#if ../isGM}}
+                        {{this.title}}
+                        {{#if this.hidden}} <span class="hidden-label">🔒 Caché</span> {{/if}}
+                    {{else}}
+                        {{#if this.hidden}}
+                            <i>🔒 Caché</i>
+                        {{else}}
+                            {{this.title}}
+                        {{/if}}
+                    {{/if}}
+                </h3>
+    
+                <p class="{{#if this.hidden}}gm-visible{{/if}}">
+                    {{#if ../isGM}}
+                        {{this.description}}
+                        {{#if this.hidden}}
+                            <span class="hidden-label">🔒 Caché pour les joueurs</span>
+                        {{/if}}
+                        {{#if this.hideDescription}}
+                            <span class="hidden-label-description">📜 Description masquée</span>
+                        {{/if}}
+                    {{else}}
+                        {{#if this.hidden}}
+                            <i>🔒 Ce trophée est caché</i>
+                        {{else}}
+                            {{#if this.hideDescription}}
+                                <i>🔒 Description cachée</i>
+                            {{else}}
+                                {{this.description}}
+                            {{/if}}
+                        {{/if}}
+                    {{/if}}
+                </p>
+    
                 <span class="grade">{{this.grade}}</span>
-
-            {{#if ../isGM}}
-                <button class="delete-trophy-btn" data-id="{{this.id}}">Supprimer</button>
-            {{/if}}
+    
+                {{#if ../isGM}}
+                    <button class="delete-trophy-btn" data-id="{{this.id}}">Supprimer</button>
+                {{/if}}
             </div>
         {{/each}}
     </div>
