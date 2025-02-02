@@ -1,8 +1,22 @@
 <form>
-    <h2>Mes Trophées</h2>
+    {{#unless isGM}}
+    <h2 class="title">Mes Trophées</h2>
+    <div class="trophy-grid">
+        {{#each trophies}}
+            {{#if (includes this.awardedTo ../userId)}}
+                <div class="trophy {{this.grade}}">
+                    <img src="{{this.image}}" alt="{{this.title}}" />
+                    <h3>{{this.title}}</h3>
+                    <p>{{this.description}}</p>
+                    <span class="grade">{{this.grade}}</span>
+                </div>
+            {{/if}}
+        {{/each}}
+    </div>
+{{/unless}}
 
     {{#if isGM}}
-        <h3>Ajouter un trophée</h3>
+        <h2>Ajouter un trophée</h2>
         <div class="form-group">
             <label for="trophy-title">Titre :</label>
             <input type="text" id="trophy-title" placeholder="Nom du trophée">
@@ -24,22 +38,103 @@
                 <option value="Platine">Platine</option>
             </select>
         </div>
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="trophy-hidden">
+            <label for="trophy-hidden">Trophée caché</label>
+        </div>
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="trophy-hide-description">
+            <label for="trophy-hide-description">Cacher la description</label>
+        </div>
+            
         <button id="add-trophy-btn">Ajouter</button>
     {{/if}}
 
     <h2 class="title">Liste des Trophées</h2>
+    {{#if ../isGM}}
+    <h3>Attribuer un trophée à un joueur</h3>
+    <div class="form-group">
+        <label for="award-player">Sélectionner un joueur :</label>
+        <select id="award-player">
+            {{#each game.users as |user|}}
+                {{#if user.active}}
+                    <option value="{{user.id}}">{{user.name}}</option>
+                {{/if}}
+            {{/each}}
+        </select>
+    </div>
+    <button class="award-trophy-btn" data-id="{{this.id}}">Attribuer</button>
+{{/if}}
+
     <div class="trophy-grid">
         {{#each trophies}}
-            <div class="trophy {{this.grade}}">
-                <img src="{{this.image}}" alt="{{this.title}}" />
-                <h3>{{this.title}}</h3>
-                <p>{{this.description}}</p>
-                <span class="grade">{{this.grade}}</span>
-
+    <div class="trophy {{this.grade}} {{#if this.hidden}}hidden-trophy{{/if}}">
+        <img src="{{this.image}}" alt="{{this.title}}" class="{{#if this.hidden}}blurred{{/if}}" />
+        
+        <h3 class="{{#if this.hidden}}gm-visible{{/if}}">
             {{#if ../isGM}}
-                <button class="delete-trophy-btn" data-id="{{this.id}}">Supprimer</button>
+                {{this.title}}
+                {{#if this.hidden}} <span class="hidden-label">🔒 Caché</span> {{/if}}
+            {{else}}
+                {{#if this.hidden}}
+                    <i>🔒 Caché</i>
+                {{else}}
+                    {{this.title}}
+                {{/if}}
             {{/if}}
+        </h3>
+
+        <p class="{{#if this.hidden}}gm-visible{{/if}}">
+            {{#if ../isGM}}
+                {{this.description}}
+                {{#if this.hidden}}
+                    <span class="hidden-label">🔒 Caché pour les joueurs</span>
+                {{/if}}
+                {{#if this.hideDescription}}
+                    <span class="hidden-label-description">📜 Description masquée</span>
+                {{/if}}
+            {{else}}
+                {{#if this.hidden}}
+                    <i>🔒 Ce trophée est caché</i>
+                {{else}}
+                    {{#if this.hideDescription}}
+                        <i>🔒 Description cachée</i>
+                    {{else}}
+                        {{this.description}}
+                    {{/if}}
+                {{/if}}
+            {{/if}}
+        </p>
+
+        <span class="grade">{{this.grade}}</span>
+
+        {{#if ../isGM}}
+            <button class="delete-trophy-btn" data-id="{{this.id}}">Supprimer</button>
+
+            <!-- Attribution des trophées aux joueurs -->
+            <h4>Attribuer à un joueur</h4>
+            <div class="form-group">
+                <label for="award-player-{{this.id}}">Sélectionner un joueur :</label>
+                <select id="award-player-{{this.id}}">
+                    {{#each ../users}}
+                        <option value="{{this.id}}">{{this.name}}</option>
+                    {{/each}}
+                </select>
             </div>
-        {{/each}}
+            <button class="award-trophy-btn" data-id="{{this.id}}">Attribuer</button>
+            
+        {{/if}}
+
+        {{#if ../isGM}}
+        {{#if this.awardedToNames.length}}
+            <p class="awarded-players">Débloqué par :
+                {{#each this.awardedToNames}}
+                    {{this}}  
+                {{/each}}
+            </p>
+        {{else}}
+            <p class="awarded-players">Aucun joueur n'a encore débloqué ce trophée.</p>
+        {{/if}}
+    {{/if}}
     </div>
-</form>
+{{/each}}

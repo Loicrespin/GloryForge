@@ -72,3 +72,65 @@ button {
 .title {
     margin-top: 5%;
 }
+
+/* Icône pour signaler que la description est cachée */
+.hidden-label {
+    font-size: 14px;
+    font-style: italic;
+    color: #ff5555;
+    margin-left: 5px;
+}
+
+.hidden-label-description {
+    font-size: 14px;
+    font-style: italic;
+    color: #ffa500;
+    margin-left: 5px;
+}
+
+
+/* Ajout d'un effet de flou sur l'image des trophées cachés */
+.blurred {
+    filter: blur(5px);
+    opacity: 0.7;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Bordure spéciale pour les trophées entièrement cachés (MJ) */
+.hidden-trophy {
+    background: linear-gradient(145deg, #500000, #220000); /* Fond rouge foncé */
+    color: #ffaaaa;
+    text-align: center;
+    padding: 10px;
+    box-shadow: 0 0 15px rgba(255, 85, 85, 0.8); /* Glow rouge */
+}
+
+/* Effet ultra-visible du titre et de la description des trophées cachés */
+.gm-visible {
+    font-weight: bold;
+    color: #ffcc00 !important; /* Jaune doré pour attirer l'attention */
+    text-shadow: 2px 2px 8px rgba(255, 204, 0, 1); /* Glow intense */
+    font-size: 16px;
+    border-bottom: 2px solid #ffcc00; /* Souligné en doré */
+    display: inline-block;
+    padding: 2px 5px;
+    background: rgba(255, 255, 0, 0.2);
+}
+
+/* Icône "Caché" plus visible */
+.hidden-trophy h3, .hidden-trophy p {
+    font-style: italic;
+    font-size: 14px;
+    color: #bbb;
+}
+
+.awarded-players {
+    font-size: 12px;
+    font-style: italic;
+    color: #00ff00; /* Vert pour montrer que c'est débloqué */
+    margin-top: 5px;
+}
+
+
+
+
