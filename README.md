@@ -10,4 +10,4 @@ GloryForge est un module pour Foundry VTT permettant au Game Master d’attribue
 
 ## Licence
 
-Ce projet est sous licence MIT." 
+Ce projet est sous licence MIT.

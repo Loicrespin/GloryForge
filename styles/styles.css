@@ -1,0 +1,74 @@
+button {
+    margin-top: 10px;
+}
+
+.trophy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    padding: 10px;
+}
+
+.trophy {
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+}
+
+/* Bordures dynamiques selon le grade */
+.trophy.Bronze {
+    border: 3px solid #cd7f32; /* Couleur bronze */
+    background: linear-gradient(145deg, #d28b47, #9c5f24); /* Dégradé bronze */
+    box-shadow: 0px 0px 12px #cd7f32;
+}
+
+.trophy.Argent {
+    border: 3px solid #c0c0c0; /* Argent clair */
+    background: linear-gradient(145deg, #e0e0e0, #a8a8a8); /* Dégradé métallique */
+    box-shadow: 0px 0px 15px #ffffff; /* Brillance blanche pour effet métallique */
+}
+
+.trophy.Or {
+    border: 3px solid #ffd700; /* Couleur or */
+    background: linear-gradient(145deg, #ffec8b, #daa520); /* Dégradé or */
+    box-shadow: 0px 0px 15px #ffeb70; /* Effet lumineux doré */
+}
+
+.trophy.Platine {
+    border: 3px solid #b0c4de; /* Couleur platine */
+    background: linear-gradient(145deg, #c2d4f8, #a0b6d6); /* Dégradé platine bleuté */
+    box-shadow: 0px 0px 15px #87ceeb; /* Effet lumineux bleu clair */
+}
+
+.trophy img {
+    width: 80px;
+    height: 80px;
+}
+
+.trophy .grade {
+    font-weight: bold;
+    color: gold;
+}
+
+/* Style du formulaire */
+.form-group {
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+}
+
+.form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.title {
+    margin-top: 5%;
+}

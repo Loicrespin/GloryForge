@@ -1,0 +1,45 @@
+<form>
+    <h2>Mes Trophées</h2>
+
+    {{#if isGM}}
+        <h3>Ajouter un trophée</h3>
+        <div class="form-group">
+            <label for="trophy-title">Titre :</label>
+            <input type="text" id="trophy-title" placeholder="Nom du trophée">
+        </div>
+        <div class="form-group">
+            <label for="trophy-description">Description :</label>
+            <textarea id="trophy-description" placeholder="Description du trophée"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="trophy-image">Image (URL) :</label>
+            <input type="text" id="trophy-image" placeholder="URL de l'image">
+        </div>
+        <div class="form-group">
+            <label for="trophy-grade">Grade :</label>
+            <select id="trophy-grade">
+                <option value="Bronze">Bronze</option>
+                <option value="Argent">Argent</option>
+                <option value="Or">Or</option>
+                <option value="Platine">Platine</option>
+            </select>
+        </div>
+        <button id="add-trophy-btn">Ajouter</button>
+    {{/if}}
+
+    <h2 class="title">Liste des Trophées</h2>
+    <div class="trophy-grid">
+        {{#each trophies}}
+            <div class="trophy {{this.grade}}">
+                <img src="{{this.image}}" alt="{{this.title}}" />
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
+                <span class="grade">{{this.grade}}</span>
+
+            {{#if ../isGM}}
+                <button class="delete-trophy-btn" data-id="{{this.id}}">Supprimer</button>
+            {{/if}}
+            </div>
+        {{/each}}
+    </div>
+</form>
