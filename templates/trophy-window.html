@@ -4,7 +4,7 @@
     <div class="trophy-grid">
         {{#each trophies}}
             {{#if (includes this.awardedTo ../userId)}}
-                <div class="trophy {{this.grade}}">
+                <div class="trophy {{this.grade}}" data-id="{{this.id}}">
                     <img src="{{this.image}}" alt="{{this.title}}" />
                     <h3>{{this.title}}</h3>
                     <p>{{this.description}}</p>
