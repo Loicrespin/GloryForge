@@ -7,19 +7,32 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", () => {
-    console.log("GloryForge | Chargement des trophées...");
-    TrophySystem.loadTrophies();
-
-    game.GloryForge = {
-        TrophySystem
-    };
+    console.log("GloryForge | Module prêt");
+    
+    // Configuration du socket
+    game.socket.on("module.gloryforge", async (data) => {
+        console.log(`GloryForge | Socket reçu par ${game.user.name}`, data);
+        
+        // Ne pas traiter l'événement pour l'émetteur
+        if (data.userId === game.user.id) return;
+        
+        if (data.type === "trophyDeleted") {
+            console.log("GloryForge | Mise à jour après suppression");
+            
+            // Recharger les trophées
+            await TrophySystem.loadTrophies();
+            
+            // Mettre à jour les fenêtres ouvertes
+            const windows = Object.values(ui.windows).filter(w => w instanceof TrophyWindow);
+            windows.forEach(w => w.render(true));
+        }
+    });
 });
 
 // Ajout du bouton dans la barre d'icônes à gauche
 Hooks.on("getSceneControlButtons", (controls) => {
     console.log("GloryForge | Ajout du bouton de trophées");
 
-    // Ajoute un groupe de contrôle dédié pour GloryForge
     controls.push({
         name: "GloryForge",
         title: "GloryForge",
@@ -31,9 +44,9 @@ Hooks.on("getSceneControlButtons", (controls) => {
                 title: "Trophées",
                 icon: "fas fa-trophy",
                 onClick: () => {
-                    const existingWindow = Object.values(ui.windows).find(w => w instanceof TrophyWindow);
-                    if (existingWindow) {
-                        existingWindow.close();
+                    const windows = Object.values(ui.windows).filter(w => w instanceof TrophyWindow);
+                    if (windows.length > 0) {
+                        windows.forEach(w => w.close());
                     } else {
                         new TrophyWindow().render(true);
                     }
@@ -44,7 +57,13 @@ Hooks.on("getSceneControlButtons", (controls) => {
     });
 });
 
-
-
-
-
+// Modification du Hook pour la suppression
+Hooks.on('GloryForgeTrophyDeleted', async (trophyId) => {
+    // Supprimer le trophée localement
+    TrophySystem.trophies = TrophySystem.trophies.filter(t => t.id !== trophyId);
+    
+    // Mettre à jour toutes les fenêtres ouvertes
+    Object.values(ui.windows)
+        .filter(w => w instanceof TrophyWindow)
+        .forEach(w => w.render(true));
+});
