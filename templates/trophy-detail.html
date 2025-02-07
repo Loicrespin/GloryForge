@@ -45,7 +45,12 @@
                     {{#if trophy.awardedToNames.length}}
                         <ul>
                             {{#each trophy.awardedToNames}}
-                                <li>{{this}}</li>
+                                <li>
+                                    {{this.name}}
+                                    <button class="revoke-trophy-btn" data-player-id="{{this.id}}" data-trophy-id="{{../trophy.id}}">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </li>
                             {{/each}}
                         </ul>
                     {{else}}

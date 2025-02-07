@@ -242,10 +242,32 @@ button {
 }
 
 .trophy-detail .awarded-players li {
-    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 4px;
     margin-bottom: 5px;
+}
+
+.trophy-detail .revoke-trophy-btn {
+    background: rgba(255, 0, 0, 0.1);
+    color: #d33;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.trophy-detail .revoke-trophy-btn:hover {
+    background: rgba(255, 0, 0, 0.2);
 }
 
 /* Contrôles d'attribution */
