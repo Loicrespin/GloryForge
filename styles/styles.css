@@ -131,87 +131,198 @@ button {
     margin-top: 5px;
 }
 
-.trophy-detail {
-    padding: 20px;
+/* Styles pour la fenêtre détaillée des trophées */
+.trophy-detail-window {
+    --header-height: 160px;
 }
 
+.trophy-detail {
+    padding: 0;
+    height: 100%;
+}
+
+/* En-tête du trophée */
 .trophy-detail .trophy-header {
+    position: relative;
+    height: var(--header-height);
     display: flex;
+    align-items: center;
     gap: 20px;
-    padding: 15px;
-    border-radius: 10px;
+    padding: 20px;
     margin-bottom: 20px;
 }
 
+/* Styles spécifiques selon le grade */
+.trophy-detail .trophy-header.Bronze {
+    background: linear-gradient(145deg, #d28b47, #9c5f24);
+}
+
+.trophy-detail .trophy-header.Argent {
+    background: linear-gradient(145deg, #e0e0e0, #a8a8a8);
+}
+
+.trophy-detail .trophy-header.Or {
+    background: linear-gradient(145deg, #ffec8b, #daa520);
+}
+
+.trophy-detail .trophy-header.Platine {
+    background: linear-gradient(145deg, #c2d4f8, #a0b6d6);
+}
+
+/* Image du trophée */
 .trophy-detail .trophy-header img {
-    width: 150px;
-    height: 150px;
-    border-radius: 8px;
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 3px solid rgba(255, 255, 255, 0.3);
     object-fit: cover;
 }
 
+/* Informations du trophée */
 .trophy-detail .trophy-info {
-    flex: 1;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.trophy-detail .trophy-info h2 {
+    font-size: 1.8em;
+    margin: 0 0 10px 0;
+    border: none;
 }
 
 .trophy-detail .trophy-grade {
-    font-size: 1.2em;
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
     font-weight: bold;
-    margin-top: 10px;
+    font-size: 0.9em;
 }
 
+/* Contenu principal */
 .trophy-detail .trophy-content {
-    background: rgba(0, 0, 0, 0.05);
     padding: 20px;
+    background: rgba(0, 0, 0, 0.02);
     border-radius: 8px;
+    margin: 0 20px 20px 20px;
 }
 
 .trophy-detail .description {
-    margin-bottom: 20px;
+    font-size: 1.1em;
     line-height: 1.6;
+    color: #444;
+    margin-bottom: 25px;
 }
 
+/* Section de gestion (GM) */
 .trophy-detail .trophy-management {
-    margin-top: 20px;
-    padding-top: 20px;
+    margin-top: 25px;
+    padding-top: 25px;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.trophy-detail .awarded-players {
+    background: rgba(0, 0, 0, 0.03);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.trophy-detail .awarded-players h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.1em;
+    color: #666;
 }
 
 .trophy-detail .awarded-players ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .trophy-detail .awarded-players li {
-    padding: 5px 0;
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    margin-bottom: 5px;
 }
 
+/* Contrôles d'attribution */
 .trophy-detail .award-controls {
-    margin-top: 15px;
     display: flex;
     gap: 10px;
+    margin-bottom: 20px;
+    align-items: stretch;
 }
 
+.trophy-detail .award-controls select {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background: white;
+    color: #444;
+    height: auto;
+    min-height: 36px;
+    font-size: 14px;
+    line-height: 20px;
+    -webkit-appearance: menulist;
+    appearance: menulist;
+}
+
+.trophy-detail .award-controls button {
+    padding: 8px 16px;
+    background: #4a8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    height: auto;
+    min-height: 36px;
+    white-space: nowrap;
+}
+
+.trophy-detail .award-controls button:hover {
+    background: #3a7;
+}
+
+/* Bouton de suppression */
 .trophy-detail .delete-controls {
     margin-top: 20px;
     padding-top: 20px;
-    border-top: 1px solid rgba(255, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 0, 0, 0.1);
 }
 
 .trophy-detail .delete-trophy-btn {
+    width: 100%;
+    padding: 10px;
     background: rgba(255, 0, 0, 0.1);
-    color: #ff0000;
-    border: 1px solid #ff0000;
-    padding: 8px 16px;
+    color: #d33;
+    border: 1px solid #d33;
     border-radius: 4px;
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
+    transition: all 0.2s;
 }
 
 .trophy-detail .delete-trophy-btn:hover {
     background: rgba(255, 0, 0, 0.2);
+}
+
+/* Labels pour les trophées cachés */
+.trophy-detail .hidden-label,
+.trophy-detail .hidden-label-description {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    margin-left: 8px;
+    background: rgba(0, 0, 0, 0.1);
 }
 
 
