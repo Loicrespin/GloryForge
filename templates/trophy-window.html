@@ -68,7 +68,7 @@
 
     <div class="trophy-grid">
         {{#each trophies}}
-    <div class="trophy {{this.grade}} {{#if this.hidden}}hidden-trophy{{/if}}">
+    <div class="trophy {{this.grade}} {{#if this.hidden}}hidden-trophy{{/if}}" data-id="{{this.id}}">
         <img src="{{this.image}}" alt="{{this.title}}" class="{{#if this.hidden}}blurred{{/if}}" />
         
         <h3 class="{{#if this.hidden}}gm-visible{{/if}}">

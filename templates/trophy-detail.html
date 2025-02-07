@@ -1,0 +1,73 @@
+<div class="trophy-detail">
+    <div class="trophy-header {{trophy.grade}}">
+        <img src="{{trophy.image}}" class="{{#if trophy.hidden}}blurred{{/if}}" />
+        <div class="trophy-info">
+            <h2 class="{{#if trophy.hidden}}gm-visible{{/if}}">
+                {{#if isGM}}
+                    {{trophy.title}}
+                    {{#if trophy.hidden}}<span class="hidden-label">🔒 Caché</span>{{/if}}
+                {{else}}
+                    {{#if trophy.hidden}}
+                        <i>🔒 Caché</i>
+                    {{else}}
+                        {{trophy.title}}
+                    {{/if}}
+                {{/if}}
+            </h2>
+            <div class="trophy-grade">{{trophy.grade}}</div>
+        </div>
+    </div>
+
+    <div class="trophy-content">
+        <div class="description {{#if trophy.hidden}}gm-visible{{/if}}">
+            {{#if isGM}}
+                {{trophy.description}}
+                {{#if trophy.hideDescription}}
+                    <span class="hidden-label-description">📜 Description masquée</span>
+                {{/if}}
+            {{else}}
+                {{#if trophy.hidden}}
+                    <i>🔒 Ce trophée est caché</i>
+                {{else}}
+                    {{#if trophy.hideDescription}}
+                        <i>🔒 Description cachée</i>
+                    {{else}}
+                        {{trophy.description}}
+                    {{/if}}
+                {{/if}}
+            {{/if}}
+        </div>
+
+        {{#if isGM}}
+            <div class="trophy-management">
+                <div class="awarded-players">
+                    <h3>Joueurs ayant débloqué ce trophée :</h3>
+                    {{#if trophy.awardedToNames.length}}
+                        <ul>
+                            {{#each trophy.awardedToNames}}
+                                <li>{{this}}</li>
+                            {{/each}}
+                        </ul>
+                    {{else}}
+                        <p>Aucun joueur n'a encore débloqué ce trophée.</p>
+                    {{/if}}
+                </div>
+
+                <div class="award-controls">
+                    <select id="award-player-detail-{{trophy.id}}">
+                        {{#each users}}
+                            <option value="{{this.id}}">{{this.name}}</option>
+                        {{/each}}
+                    </select>
+                    <button class="award-trophy-btn" data-id="{{trophy.id}}">Attribuer</button>
+                </div>
+
+                <div class="delete-controls">
+                    <button class="delete-trophy-btn" data-id="{{trophy.id}}">
+                        <i class="fas fa-trash"></i> Supprimer le trophée
+                    </button>
+                </div>
+            </div>
+        {{/if}}
+    </div>
+</div> 

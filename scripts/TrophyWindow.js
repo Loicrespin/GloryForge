@@ -1,4 +1,5 @@
 import { TrophySystem } from "./TrophySystem.js";
+import { TrophyDetail } from "./TrophyDetail.js";
 
 export class TrophyWindow extends Application {
     constructor(options = {}) {
@@ -53,65 +54,80 @@ export class TrophyWindow extends Application {
         super.activateListeners(html);
 
         // Gestion du formulaire d'ajout
-        html.find("#add-trophy-btn").on("click", async (event) => {
-            event.preventDefault();
-            const title = html.find("#trophy-title").val();
-            const description = html.find("#trophy-description").val();
-            const image = html.find("#trophy-image").val();
-            const grade = html.find("#trophy-grade").val();
-            const hidden = html.find("#trophy-hidden")[0]?.checked || false;
-            const hideDescription = html.find("#trophy-hide-description")[0]?.checked || false;
-        
-            if (!title || !description || !image || !grade) {
-                ui.notifications.warn("Veuillez remplir tous les champs !");
-                return;
-            }
-        
-            await TrophySystem.addTrophy(title, description, image, grade, hidden, hideDescription);
-            this.render();
-        });
-
-        //Gestion pour attribution du trophée
-        html.find(".award-trophy-btn").on("click", async (event) => {
-            event.preventDefault();
+        if (game.user.isGM) {
+            html.find("#add-trophy-btn").on("click", async (event) => {
+                event.preventDefault();
+                const title = html.find("#trophy-title").val();
+                const description = html.find("#trophy-description").val();
+                const image = html.find("#trophy-image").val();
+                const grade = html.find("#trophy-grade").val();
+                const hidden = html.find("#trophy-hidden")[0]?.checked || false;
+                const hideDescription = html.find("#trophy-hide-description")[0]?.checked || false;
             
-            const trophyId = event.currentTarget.dataset.id;
-            const playerSelect = html.find(`#award-player-${trophyId}`);
-            const playerId = playerSelect.val();
-        
-            if (!playerId || !trophyId) {
-                ui.notifications.warn("Veuillez sélectionner un joueur.");
-                return;
-            }
-        
-            await TrophySystem.awardTrophy(playerId, trophyId);
-            this.render();
-        });
-        
-        
-
-        html.find(".delete-trophy-btn").on("click", async (event) => {
-            event.preventDefault();
+                if (!title || !description || !image || !grade) {
+                    ui.notifications.warn("Veuillez remplir tous les champs !");
+                    return;
+                }
             
-            const trophyId = event.currentTarget.dataset.id;
-            
-            if (!trophyId) return;
-        
-            const confirmed = await Dialog.confirm({
-                title: "Supprimer le trophée",
-                content: `<p>Voulez-vous vraiment supprimer ce trophée ?</p>`,
-                yes: () => true,
-                no: () => false,
-                defaultYes: false
+                await TrophySystem.addTrophy(title, description, image, grade, hidden, hideDescription);
+                this.render();
             });
-        
-            if (confirmed) {
-                await TrophySystem.removeTrophy(trophyId);
-                // Forcer le rechargement des données et la mise à jour
-                await TrophySystem.loadTrophies();
-                this.render(true);
+
+            html.find(".delete-trophy-btn").on("click", async (event) => {
+                event.preventDefault();
+                
+                const trophyId = event.currentTarget.dataset.id;
+                
+                if (!trophyId) return;
+            
+                const confirmed = await Dialog.confirm({
+                    title: "Supprimer le trophée",
+                    content: `<p>Voulez-vous vraiment supprimer ce trophée ?</p>`,
+                    yes: () => true,
+                    no: () => false,
+                    defaultYes: false
+                });
+            
+                if (confirmed) {
+                    await TrophySystem.removeTrophy(trophyId);
+                    // Forcer le rechargement des données et la mise à jour
+                    await TrophySystem.loadTrophies();
+                    this.render(true);
+                }
+            });
+
+            html.find(".award-trophy-btn").on("click", async (event) => {
+                event.preventDefault();
+                
+                const trophyId = event.currentTarget.dataset.id;
+                const playerSelect = html.find(`#award-player-${trophyId}`);
+                const playerId = playerSelect.val();
+            
+                if (!playerId || !trophyId) {
+                    ui.notifications.warn("Veuillez sélectionner un joueur.");
+                    return;
+                }
+            
+                await TrophySystem.awardTrophy(playerId, trophyId);
+                this.render();
+            });
+        }
+
+        // Ajout de l'écouteur pour la vue détaillée
+        html.find('.trophy').on('click', (event) => {
+            // Éviter le déclenchement sur les clics des boutons
+            if (event.target.closest('button')) return;
+            
+            console.log("GloryForge | Click sur un trophée");
+            const trophyId = event.currentTarget.dataset.id;
+            console.log("GloryForge | ID du trophée:", trophyId);
+            
+            const trophy = TrophySystem.trophies.find(t => t.id === trophyId);
+            if (trophy) {
+                console.log("GloryForge | Ouverture de la vue détaillée");
+                new TrophyDetail(trophy).render(true);
             }
-        });              
+        });
     }
 
     // Ajoutez cette méthode pour permettre une mise à jour forcée
