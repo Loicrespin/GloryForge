@@ -131,6 +131,89 @@ button {
     margin-top: 5px;
 }
 
+.trophy-detail {
+    padding: 20px;
+}
+
+.trophy-detail .trophy-header {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.trophy-detail .trophy-header img {
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.trophy-detail .trophy-info {
+    flex: 1;
+}
+
+.trophy-detail .trophy-grade {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.trophy-detail .trophy-content {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.trophy-detail .description {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.trophy-detail .trophy-management {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.trophy-detail .awarded-players ul {
+    list-style: none;
+    padding: 0;
+}
+
+.trophy-detail .awarded-players li {
+    padding: 5px 0;
+}
+
+.trophy-detail .award-controls {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.trophy-detail .delete-controls {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 0, 0, 0.2);
+}
+
+.trophy-detail .delete-trophy-btn {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff0000;
+    border: 1px solid #ff0000;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.trophy-detail .delete-trophy-btn:hover {
+    background: rgba(255, 0, 0, 0.2);
+}
+
 
 
 
