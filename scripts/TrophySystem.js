@@ -120,4 +120,31 @@ export class TrophySystem {
             AudioHelper.play({src: "modules/GloryForge/assets/sounds/achievement.mp3", volume: 0.8, autoplay: true, loop: false}, true);
         }
     }
+
+    static async revokeTrophy(playerId, trophyId) {
+        console.log("GloryForge | Désattribution du trophée", trophyId, "du joueur", playerId);
+        
+        const trophy = this.trophies.find(t => t.id === trophyId);
+        if (!trophy) return;
+
+        // Retirer le joueur de la liste des attributions
+        trophy.awardedTo = trophy.awardedTo.filter(id => id !== playerId);
+
+        // Sauvegarder les modifications
+        await game.settings.set("GloryForge", "trophies", this.trophies);
+
+        // Émettre un socket pour synchroniser
+        await game.socket.emit("module.gloryforge", {
+            type: "trophyRevoked",
+            trophyId: trophyId,
+            playerId: playerId,
+            userId: game.user.id
+        });
+
+        // Notifier l'interface
+        ui.notifications.info(`Le trophée "${trophy.title}" a été retiré au joueur ${game.users.get(playerId)?.name}`);
+        
+        // Déclencher la mise à jour
+        Hooks.callAll("updateTrophies");
+    }
 }
