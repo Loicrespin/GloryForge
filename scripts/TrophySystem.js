@@ -1,4 +1,6 @@
 export class TrophySystem {
+    static SOCKET = "module.GloryForge";
+
     static trophies = [];
 
     static async registerSettings() {
@@ -93,32 +95,75 @@ export class TrophySystem {
 
     //Attribuer un trophée
     static async awardTrophy(playerId, trophyId) {
-        if (!game.user.isGM) return;
-    
-        let trophies = game.settings.get("GloryForge", "trophies") || [];
-        let trophy = trophies.find(t => t.id === trophyId);
-    
-        if (!trophy) {
-            ui.notifications.error("Trophée introuvable !");
-            return;
-        }
-    
-        // Vérifier si le joueur a déjà ce trophée
+        console.log("GloryForge | Attribution du trophée", trophyId, "au joueur", playerId);
+        
+        const trophy = this.trophies.find(t => t.id === trophyId);
+        if (!trophy) return;
+
+        // Vérifier si le joueur n'a pas déjà le trophée
         if (!trophy.awardedTo.includes(playerId)) {
             trophy.awardedTo.push(playerId);
-            await game.settings.set("GloryForge", "trophies", trophies);
-            ui.notifications.info(`Le joueur ${game.users.get(playerId)?.name} a reçu le trophée "${trophy.title}" !`);
-        } else {
-            ui.notifications.warn("Ce joueur possède déjà ce trophée.");
+            
+            // Sauvegarder les modifications
+            await game.settings.set("GloryForge", "trophies", this.trophies);
+
+            // Créer et afficher la notification dans le chat
+            let chatData = {
+                content: `
+                    <div class="trophy-notification">
+                        <img src="${trophy.image}" width="50" height="50"/>
+                        <div class="trophy-info">
+                            <h3>🏆 Nouveau Trophée Débloqué !</h3>
+                            <p>${trophy.title}</p>
+                        </div>
+                    </div>
+                `,
+                whisper: [playerId],
+                type: CONST.CHAT_MESSAGE_TYPES.OTHER
+            };
+            
+            await ChatMessage.create(chatData);
+
+            // Envoyer un message socket pour jouer le son
+            if (game.user.isGM) {
+                console.log("GloryForge | Envoi du socket pour jouer le son pour", playerId);
+                game.socket.emit("module.GloryForge", {
+                    type: "playSound",
+                    userId: playerId,
+                    trophyId: trophyId
+                });
+            }
+
+            // Déclencher la mise à jour
+            Hooks.callAll("updateTrophies");
         }
     }    
 
-    static notifyPlayer(playerId, trophy) {
-        let player = game.users.get(playerId);
-        if (player) {
-            ui.notifications.info(`${player.name} a débloqué un trophée: ${trophy.title}`);
-            AudioHelper.play({src: "modules/GloryForge/assets/sounds/achievement.mp3", volume: 0.8, autoplay: true, loop: false}, true);
-        }
+    static async notifyPlayer(playerId, trophy) {
+        // Créer et afficher la notification dans le chat
+        let chatData = {
+            content: `
+                <div class="trophy-notification">
+                    <img src="${trophy.image}" width="50" height="50"/>
+                    <div class="trophy-info">
+                        <h3>🏆 Nouveau Trophée Débloqué !</h3>
+                        <p>${trophy.title}</p>
+                    </div>
+                </div>
+            `,
+            whisper: [playerId],
+            type: CONST.CHAT_MESSAGE_TYPES.OTHER
+        };
+        
+        await ChatMessage.create(chatData);
+
+        // Émettre un socket pour le son avec plus d'informations
+        console.log("GloryForge | Émission du son pour le joueur", playerId);
+        game.socket.emit("module.GloryForge", {
+            operation: "playTrophySound",
+            userId: playerId,
+            trophy: trophy.title // Ajout du titre pour le debug
+        });
     }
 
     static async revokeTrophy(playerId, trophyId) {
@@ -146,5 +191,40 @@ export class TrophySystem {
         
         // Déclencher la mise à jour
         Hooks.callAll("updateTrophies");
+    }
+
+    static async playTrophySound() {
+        console.log("GloryForge | Tentative de lecture du son");
+        try {
+            const result = await AudioHelper.play({
+                src: "modules/GloryForge/assets/sounds/trophy_win.ogg",
+                volume: 0.8,
+                autoplay: true,
+                loop: false
+            });
+            console.log("GloryForge | Son joué avec succès:", result);
+        } catch (error) {
+            console.error("GloryForge | Erreur lors de la lecture du son:", error);
+        }
+    }
+
+    static initialize() {
+        console.log("GloryForge | Initialisation du système de son");
+
+        // Écouter les événements socket
+        if (game.socket) {
+            game.socket.on("module.GloryForge", (data) => {
+                console.log("GloryForge | Réception d'un événement socket:", data);
+                
+                // Vérifier si c'est pour cet utilisateur
+                if (data.type === "playSound" && data.userId === game.user.id) {
+                    console.log("GloryForge | Lecture du son pour", game.user.name);
+                    this.playTrophySound();
+                }
+            });
+            console.log("GloryForge | Écouteur de socket initialisé");
+        } else {
+            console.error("GloryForge | Socket non disponible");
+        }
     }
 }

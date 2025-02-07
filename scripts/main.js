@@ -6,8 +6,10 @@ Hooks.once("init", () => {
     TrophySystem.registerSettings();
 });
 
-Hooks.once("ready", () => {
+Hooks.once("ready", async function() {
     console.log("GloryForge | Module prêt");
+    TrophySystem.initialize();
+    TrophySystem.initializeSocket();
     
     // Configuration du socket
     game.socket.on("module.gloryforge", async (data) => {
