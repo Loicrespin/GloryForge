@@ -347,6 +347,37 @@ button {
     background: rgba(0, 0, 0, 0.1);
 }
 
+/* Style pour la notification de trophée dans le chat */
+.trophy-notification {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    margin: 5px 0;
+}
+
+.trophy-notification img {
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.trophy-notification .trophy-info {
+    flex: 1;
+}
+
+.trophy-notification h3 {
+    margin: 0 0 5px 0;
+    color: #c17d0f;
+}
+
+.trophy-notification p {
+    margin: 0;
+    color: #666;
+}
+
 
 
 
