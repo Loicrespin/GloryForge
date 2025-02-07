@@ -1,4 +1,22 @@
+import { TrophySystem } from "./TrophySystem.js";
+
 export class TrophyWindow extends Application {
+    constructor(options = {}) {
+        super(options);
+        
+        // Ajouter un écouteur pour les mises à jour
+        this.hookId = Hooks.on("updateTrophies", () => {
+            console.log("GloryForge | Hook updateTrophies reçu, mise à jour de la fenêtre");
+            this.render(true);
+        });
+    }
+
+    close(options = {}) {
+        // Nettoyer l'écouteur lors de la fermeture
+        Hooks.off("updateTrophies", this.hookId);
+        return super.close(options);
+    }
+
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: "gloryforge-trophy-window",
@@ -10,26 +28,25 @@ export class TrophyWindow extends Application {
         });
     }
 
-    getData() {
-        const users = Object.fromEntries(game.users.contents.map(u => [u.id, u.name])); // Convertit en objet cl�/valeur
-    
-        let trophies = game.settings.get("GloryForge", "trophies") || [];
-    
-        // Ajoute les noms des joueurs aux troph�es d�bloqu�s
-        trophies = trophies.map(trophy => {
-            return {
+    getData(options = {}) {
+        // Forcer le rechargement des trophées avant de récupérer les données
+        return TrophySystem.loadTrophies().then(() => {
+            const users = Object.fromEntries(game.users.contents.map(u => [u.id, u.name]));
+            
+            let trophies = TrophySystem.trophies;
+            trophies = trophies.map(trophy => ({
                 ...trophy,
-                awardedToNames: trophy.awardedTo.map(playerId => users[playerId] || "Inconnu") // R�cup�re les noms
+                awardedToNames: trophy.awardedTo.map(playerId => users[playerId] || "Inconnu")
+            }));
+
+            return {
+                isGM: game.user.isGM,
+                userId: game.user.id,
+                trophies,
+                users: game.users.filter(u => u.active),
+                userNames: users
             };
         });
-    
-        return {
-            isGM: game.user.isGM,
-            userId: game.user.id,
-            trophies,
-            users: game.users.filter(u => u.active), // Liste des joueurs actifs
-            userNames: users // Liste des noms {id: "Nom"}
-        };
     }
     
     activateListeners(html) {
@@ -50,8 +67,8 @@ export class TrophyWindow extends Application {
                 return;
             }
         
-            await game.GloryForge.TrophySystem.addTrophy(title, description, image, grade, hidden, hideDescription);
-            this.render(); // Recharge la fenêtre pour afficher le nouveau trophée
+            await TrophySystem.addTrophy(title, description, image, grade, hidden, hideDescription);
+            this.render();
         });
 
         //Gestion pour attribution du trophée
@@ -67,8 +84,8 @@ export class TrophyWindow extends Application {
                 return;
             }
         
-            await game.GloryForge.TrophySystem.awardTrophy(playerId, trophyId);
-            this.render(); // Recharge la fenêtre après attribution
+            await TrophySystem.awardTrophy(playerId, trophyId);
+            this.render();
         });
         
         
@@ -89,9 +106,16 @@ export class TrophyWindow extends Application {
             });
         
             if (confirmed) {
-                await game.GloryForge.TrophySystem.removeTrophy(trophyId);
-                this.render(); // Recharge la fenêtre après suppression
+                await TrophySystem.removeTrophy(trophyId);
+                // Forcer le rechargement des données et la mise à jour
+                await TrophySystem.loadTrophies();
+                this.render(true);
             }
         });              
+    }
+
+    // Ajoutez cette méthode pour permettre une mise à jour forcée
+    refresh() {
+        this.render(true);
     }
 }

@@ -9,14 +9,38 @@ export class TrophySystem {
             type: Array,
             default: [],
             onChange: value => {
+                console.log("GloryForge | Changement détecté dans les trophées");
                 TrophySystem.trophies = value;
+                // Déclencher la mise à jour
+                Hooks.callAll("updateTrophies");
+            }
+        });
+
+        // Ajouter un paramètre pour forcer les mises à jour
+        game.settings.register("GloryForge", "lastUpdate", {
+            name: "Dernière mise à jour",
+            scope: "world",
+            config: false,
+            type: Number,
+            default: 0,
+            onChange: () => {
+                console.log("GloryForge | Mise à jour forcée");
+                TrophySystem.loadTrophies().then(() => {
+                    Object.values(ui.windows)
+                        .filter(w => w instanceof TrophyWindow)
+                        .forEach(w => w.render(true));
+                });
             }
         });
     }
 
     //Charger les trophées
     static async loadTrophies() {
-        this.trophies = game.settings.get("GloryForge", "trophies") || [];
+        console.log("GloryForge | Chargement des trophées");
+        const trophies = game.settings.get("GloryForge", "trophies") || [];
+        this.trophies = trophies;
+        console.log("GloryForge | Trophées chargés:", this.trophies.length);
+        return this.trophies;
     }
 
     //Ajout d'un trophée
@@ -42,11 +66,29 @@ export class TrophySystem {
     static async removeTrophy(id) {
         if (!game.user.isGM) return;
     
-        // Filtrer la liste pour ne garder que les trophées dont l'ID est différent
+        console.log("GloryForge | Début de la suppression du trophée:", id);
+    
+        // Filtrer la liste
         this.trophies = this.trophies.filter(t => t.id !== id);
     
-        // Sauvegarder la nouvelle liste des trophées
+        // Sauvegarder
+        console.log("GloryForge | Sauvegarde des modifications");
         await game.settings.set("GloryForge", "trophies", this.trophies);
+    
+        // Émettre l'événement socket
+        console.log("GloryForge | Émission du socket");
+        
+        // Utiliser la méthode executeForEveryone de Foundry
+        await game.socket.emit("module.gloryforge", {
+            type: "trophyDeleted",
+            trophyId: id,
+            userId: game.user.id
+        });
+    
+        // Forcer la mise à jour pour tout le monde
+        Hooks.callAll("updateTrophies");
+    
+        console.log("GloryForge | Fin de la suppression");
     }    
 
     //Attribuer un trophée
