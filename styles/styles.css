@@ -347,35 +347,128 @@ button {
     background: rgba(0, 0, 0, 0.1);
 }
 
-/* Style pour la notification de trophée dans le chat */
+/* Style de base pour la notification */
 .trophy-notification {
     display: flex;
     align-items: center;
-    gap: 15px;
-    background: rgba(255, 215, 0, 0.1);
     padding: 10px;
     border-radius: 8px;
-    border: 1px solid rgba(255, 215, 0, 0.3);
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     margin: 5px 0;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
 }
 
-.trophy-notification img {
+/* Styles pour l'icône */
+.trophy-notification .trophy-icon {
+    margin-right: 15px;
+}
+
+.trophy-notification .trophy-icon img {
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
+/* Styles pour les informations */
 .trophy-notification .trophy-info {
-    flex: 1;
+    flex-grow: 1;
 }
 
 .trophy-notification h3 {
     margin: 0 0 5px 0;
-    color: #c17d0f;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: white;
 }
 
-.trophy-notification p {
+.trophy-notification .trophy-title {
     margin: 0;
-    color: #666;
+    font-size: 1em;
+    color: #cccccc;
+}
+
+.trophy-notification .trophy-grade {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-top: 5px;
+    color: white;
+}
+
+/* Styles spécifiques aux grades - Utilisation des mêmes couleurs que les cartes */
+.trophy-notification.trophy-grade-bronze {
+    border: 3px solid #CD7F32;
+    background: linear-gradient(to right, #CD7F32, #E6B57E, #B87333, #F1C27D, #8C6239);
+    box-shadow: 0px 0px 15px rgba(205, 127, 50, 1);
+}
+
+.trophy-notification.trophy-grade-silver {
+    border: 3px solid #C0C0C0;
+    background: linear-gradient(to right, #C0C0C0, #E0E0E0, #B0B0B0, #F0F0F0, #A0A0A0);
+    box-shadow: 0px 0px 15px rgba(192, 192, 192, 1);
+}
+
+.trophy-notification.trophy-grade-gold {
+    border: 3px solid #bf953f;
+    background:linear-gradient(to right, #BF953F, #fcf6ba, #B38728, #FBF5B7, #AA771C);
+    box-shadow: 0px 0px 15px rgba(191, 149, 63, 1);
+}
+
+.trophy-notification.trophy-grade-platinum {
+    border: 3px solid #A8C0FF;
+    background: linear-gradient(to right, #A8C0FF, #D9EFFF, #8EC5FC, #E0EFFF, #5B92E5);
+    box-shadow: 0px 0px 15px rgba(168, 192, 255, 1);
+}
+
+/* Animation d'apparition */
+@keyframes trophyNotification {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.trophy-notification {
+    animation: trophyNotification 0.3s ease-out forwards;
+}
+
+/* Effet de brillance pour les grades supérieurs */
+.trophy-notification.trophy-grade-gold,
+.trophy-notification.trophy-grade-platinum {
+    position: relative;
+    overflow: hidden;
+}
+
+.trophy-notification.trophy-grade-gold::after,
+.trophy-notification.trophy-grade-platinum::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.1) 45%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.1) 55%,
+        transparent 100%
+    );
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
 }
 
 

@@ -107,14 +107,36 @@ export class TrophySystem {
             // Sauvegarder les modifications
             await game.settings.set("GloryForge", "trophies", this.trophies);
 
+            // Convertir le grade en classe CSS
+            let gradeClass = '';
+            switch(trophy.grade) {
+                case 'Bronze':
+                    gradeClass = 'trophy-grade-bronze';
+                    break;
+                case 'Argent':
+                    gradeClass = 'trophy-grade-silver';
+                    break;
+                case 'Or':
+                    gradeClass = 'trophy-grade-gold';
+                    break;
+                case 'Platine':
+                    gradeClass = 'trophy-grade-platinum';
+                    break;
+                default:
+                    gradeClass = 'trophy-grade-normal';
+            }
+
             // Créer et afficher la notification dans le chat
             let chatData = {
                 content: `
-                    <div class="trophy-notification">
-                        <img src="${trophy.image}" width="50" height="50"/>
+                    <div class="trophy-notification ${gradeClass}">
+                        <div class="trophy-icon">
+                            <img src="${trophy.image}" width="50" height="50"/>
+                        </div>
                         <div class="trophy-info">
                             <h3>🏆 Nouveau Trophée Débloqué !</h3>
-                            <p>${trophy.title}</p>
+                            <p class="trophy-title">${trophy.title}</p>
+                            ${trophy.grade ? `<span class="trophy-grade">${trophy.grade}</span>` : ''}
                         </div>
                     </div>
                 `,
