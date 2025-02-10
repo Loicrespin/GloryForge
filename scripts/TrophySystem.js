@@ -1,3 +1,5 @@
+import { TrophyDetail } from './TrophyDetail.js';
+
 export class TrophySystem {
     static SOCKET = "module.GloryForge";
 
@@ -107,7 +109,7 @@ export class TrophySystem {
             // Sauvegarder les modifications
             await game.settings.set("GloryForge", "trophies", this.trophies);
 
-            // Convertir le grade en classe CSS
+            // Déterminer la classe CSS en fonction du grade
             let gradeClass = '';
             switch(trophy.grade) {
                 case 'Bronze':
@@ -129,7 +131,7 @@ export class TrophySystem {
             // Créer et afficher la notification dans le chat
             let chatData = {
                 content: `
-                    <div class="trophy-notification ${gradeClass}">
+                    <div class="trophy-notification ${gradeClass}" data-trophy-id="${trophy.id}">
                         <div class="trophy-icon">
                             <img src="${trophy.image}" width="50" height="50"/>
                         </div>
@@ -143,6 +145,8 @@ export class TrophySystem {
                 whisper: [playerId],
                 type: CONST.CHAT_MESSAGE_TYPES.OTHER
             };
+
+            console.log("GloryForge | Création de la notification avec ID:", trophy.id);
             
             await ChatMessage.create(chatData);
 
@@ -232,6 +236,31 @@ export class TrophySystem {
 
     static initialize() {
         console.log("GloryForge | Initialisation du système de son");
+
+        // Ajouter l'écouteur pour les clics sur les notifications dans le chat
+        $(document).on('click', '#chat-log .trophy-notification', async function(event) {
+            console.log("GloryForge | Clic sur une notification de trophée");
+            const trophyId = $(this).data('trophy-id');
+            console.log("GloryForge | ID du trophée cliqué:", trophyId);
+            
+            if (trophyId) {
+                // Charger les trophées si nécessaire
+                if (!TrophySystem.trophies || TrophySystem.trophies.length === 0) {
+                    console.log("GloryForge | Chargement des trophées avant ouverture du détail");
+                    await TrophySystem.loadTrophies();
+                }
+
+                // Trouver le trophée correspondant
+                const trophy = TrophySystem.trophies.find(t => t.id === trophyId);
+                console.log("GloryForge | Trophée trouvé:", trophy);
+                
+                if (trophy) {
+                    console.log("GloryForge | Ouverture de la vue détail pour:", trophy.title);
+                    // Ouvrir la vue détail existante
+                    new TrophyDetail(trophy).render(true);
+                }
+            }
+        });
 
         // Écouter les événements socket
         if (game.socket) {
