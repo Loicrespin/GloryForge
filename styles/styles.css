@@ -124,10 +124,11 @@ button {
     color: #bbb;
 }
 
+/* Joueurs qui ont débloqué le trophée */
 .awarded-players {
-    font-size: 12px;
+    font-size: 13px;
     font-style: italic;
-    color: #00ff00; /* Vert pour montrer que c'est débloqué */
+    color: #018d01;
     margin-top: 5px;
 }
 
