@@ -2,14 +2,14 @@
     "id": "GloryForge",
     "title": "GloryForge",
     "description": "Un système de trophées pour Foundry VTT",
-    "version": "1.0.0",
+    "version": "0.1.0-alpha",
     "compatibility": {
-        "minimum": "10",
-        "verified": "11"
+        "minimum": "12",
+        "verified": "12"
     },
     "authors": [
         {
-            "name": "Votre nom"
+            "name": "Nip's"
         }
     ],
     "esmodules": [
@@ -30,6 +30,9 @@
             "path": "lang/en.json"
         }
     ],
+    "url": "https://github.com/Loicrespin/GloryForge",
+    "manifest": "https://github.com/Loicrespin/GloryForge/releases/download/v0.1.0-alpha/module.json",
+    "download": "https://github.com/Loicrespin/GloryForge/releases/download/v0.1.0-alpha/GloryForge.zip",
     "socket": true
 }
   
