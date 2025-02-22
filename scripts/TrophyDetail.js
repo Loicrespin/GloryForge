@@ -4,6 +4,7 @@ export class TrophyDetail extends Application {
     constructor(trophy, options = {}) {
         super(options);
         this.trophy = trophy;
+        this.isEditing = false;
     }
 
     static get defaultOptions() {
@@ -31,12 +32,51 @@ export class TrophyDetail extends Application {
                 awardedToNames: awardedToNames  // Utiliser le nouveau format
             },
             isGM: game.user.isGM,
-            users: users
+            users: users,
+            isEditing: this.isEditing,
+            grades: ['Bronze', 'Argent', 'Or', 'Platine']
         };
     }
 
     activateListeners(html) {
         super.activateListeners(html);
+
+        if (game.user.isGM) {
+            // Bouton d'édition
+            html.find('.edit-trophy-btn').click(() => {
+                this.isEditing = true;
+                this.render(true);
+            });
+
+            // Bouton de sauvegarde
+            html.find('.save-trophy-btn').click(async (event) => {
+                event.preventDefault();
+                const form = html.find('form')[0];
+                const formData = new FormData(form);
+
+                const updates = {
+                    title: formData.get('title'),
+                    description: formData.get('description'),
+                    image: formData.get('image'),
+                    grade: formData.get('grade'),
+                    hidden: formData.get('hidden') === 'on',
+                    hideDescription: formData.get('hideDescription') === 'on'
+                };
+
+                const success = await TrophySystem.updateTrophy(this.trophy.id, updates);
+                if (success) {
+                    this.isEditing = false;
+                    this.trophy = { ...this.trophy, ...updates };
+                    this.render(true);
+                }
+            });
+
+            // Bouton d'annulation
+            html.find('.cancel-edit-btn').click(() => {
+                this.isEditing = false;
+                this.render(true);
+            });
+        }
 
         if (game.user.isGM) {
             html.find('.award-trophy-btn').click(async (event) => {
@@ -91,4 +131,4 @@ export class TrophyDetail extends Application {
             });
         }
     }
-} 
+}
