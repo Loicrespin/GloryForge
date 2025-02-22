@@ -234,6 +234,44 @@ export class TrophySystem {
         }
     }
 
+    static async updateTrophy(trophyId, updates) {
+        if (!game.user.isGM) return false;
+
+        try {
+            const index = this.trophies.findIndex(t => t.id === trophyId);
+            if (index === -1) {
+                ui.notifications.error("Trophée non trouvé");
+                return false;
+            }
+
+            // Mise à jour du trophée en conservant les propriétés existantes
+            this.trophies[index] = {
+                ...this.trophies[index],
+                title: updates.title || this.trophies[index].title,
+                description: updates.description || this.trophies[index].description,
+                image: updates.image || this.trophies[index].image,
+                grade: updates.grade || this.trophies[index].grade,
+                hidden: updates.hidden ?? this.trophies[index].hidden,
+                hideDescription: updates.hideDescription ?? this.trophies[index].hideDescription
+            };
+
+            await game.settings.set("GloryForge", "trophies", this.trophies);
+
+            game.socket.emit("module.gloryforge", {
+                type: "trophyUpdated",
+                userId: game.user.id,
+                trophy: this.trophies[index]
+            });
+
+            ui.notifications.info(`Trophée "${this.trophies[index].title}" mis à jour`);
+            return true;
+        } catch (error) {
+            console.error("GloryForge | Erreur lors de la mise à jour:", error);
+            ui.notifications.error("Erreur lors de la mise à jour du trophée");
+            return false;
+        }
+    }
+
     static initialize() {
         console.log("GloryForge | Initialisation du système de son");
 
