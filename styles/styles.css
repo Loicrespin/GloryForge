@@ -73,6 +73,22 @@ button {
     margin-top: 5%;
 }
 
+.form-buttons .save-trophy-btn {
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.form-buttons .cancel-edit-btn {
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
 /* Icône pour signaler que la description est cachée */
 .hidden-label {
     font-size: 14px;
@@ -300,6 +316,7 @@ button {
     color: white;
     border: none;
     border-radius: 4px;
+    height: auto;
     cursor: pointer;
     transition: background 0.2s;
     height: auto;
@@ -309,6 +326,36 @@ button {
 
 .trophy-detail .award-controls button:hover {
     background: #3a7;
+}
+
+/* Ajoutez ces styles pour l'alignement des contrôles d'attribution */
+.award-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.award-controls select {
+    flex: 1;
+    min-width: 150px;
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid var(--color-border-light);
+}
+
+.award-controls .award-trophy-btn {
+    padding: 5px 10px;
+    white-space: nowrap;
+    border-radius: 3px;
+    background: var(--color-secondary);
+    color: var(--color-text-light-highlight);
+    border: none;
+    cursor: pointer;
+}
+
+.award-controls .award-trophy-btn:hover {
+    background: var(--color-secondary-hover);
 }
 
 /* Bouton de suppression */
@@ -470,6 +517,106 @@ button {
 @keyframes shine {
     0% { transform: translateX(-100%) rotate(45deg); }
     100% { transform: translateX(100%) rotate(45deg); }
+}
+
+/* Formulaire d'édition */
+
+.trophy-edit-form {
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+.trophy-edit-form.closing {
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+.form-buttons {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.save-trophy-btn,
+.cancel-edit-btn {
+    transition: transform 0.2s ease;
+}
+
+.save-trophy-btn:hover,
+.cancel-edit-btn:hover {
+    transform: scale(1.05);
+}
+
+.edit-trophy-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 8px;
+    background: var(--color-secondary);
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.edit-trophy-btn:hover {
+    background: var(--color-secondary-hover);
+}
+
+.trophy-edit-form {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.trophy-edit-form.opening {
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+.trophy-edit-form.closing {
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
 }
 
 
