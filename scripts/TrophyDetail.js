@@ -86,7 +86,7 @@ export class TrophyDetail extends Application {
                 setTimeout(() => {
                     this.isEditing = false;
                     this.render(true);
-                }, 300); // Durée correspondant à l'animation CSS
+                }, 300);
             });
         }
 
