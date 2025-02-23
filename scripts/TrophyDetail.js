@@ -46,14 +46,19 @@ export class TrophyDetail extends Application {
             html.find('.edit-trophy-btn').click(() => {
                 this.isEditing = true;
                 this.render(true);
+                // Ajouter un petit délai pour s'assurer que le formulaire est rendu
+                setTimeout(() => {
+                    const form = html.find('.trophy-edit-form');
+                    form.removeClass('closing'); // Au cas où
+                    form.addClass('opening');
+                }, 300);
             });
 
             // Bouton de sauvegarde
             html.find('.save-trophy-btn').click(async (event) => {
                 event.preventDefault();
-                const form = html.find('form')[0];
-                const formData = new FormData(form);
-
+                const formData = new FormData(html.find('form')[0]);
+                
                 const updates = {
                     title: formData.get('title'),
                     description: formData.get('description'),
@@ -73,8 +78,15 @@ export class TrophyDetail extends Application {
 
             // Bouton d'annulation
             html.find('.cancel-edit-btn').click(() => {
-                this.isEditing = false;
-                this.render(true);
+                const form = html.find('.trophy-edit-form');
+                form.removeClass('opening');
+                form.addClass('closing');
+                
+                // Attendre la fin de l'animation avant de fermer
+                setTimeout(() => {
+                    this.isEditing = false;
+                    this.render(true);
+                }, 300); // Durée correspondant à l'animation CSS
             });
         }
 

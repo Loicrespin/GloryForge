@@ -1,45 +1,91 @@
 <div class="trophy-detail">
     {{#if isGM}}
-    <div class="trophy-header {{trophy.grade}}">
-        <img src="{{trophy.image}}" class="{{#if trophy.hidden}}blurred{{/if}}" />
-        <div class="trophy-info">
-            <h2 class="{{#if trophy.hidden}}gm-visible{{/if}}">
+        <div class="trophy-header {{trophy.grade}}">
+            <img src="{{trophy.image}}" class="{{#if trophy.hidden}}blurred{{/if}}" />
+            <div class="trophy-info">
+                <h2 class="{{#if trophy.hidden}}gm-visible{{/if}}">
+                    {{#if isGM}}
+                        {{trophy.title}}
+                        {{#if trophy.hidden}}
+                            <span class="hidden-label">🔒 Caché</span>
+                        {{/if}}
+                    {{else}}
+                        {{#if trophy.hidden}}
+                            <i>🔒 Caché</i>
+                        {{else}}
+                            {{trophy.title}}
+                        {{/if}}
+                    {{/if}}
+                </h2>
+                <div class="trophy-grade">{{trophy.grade}}</div>
+            </div>
+        </div>
+
+        <div class="trophy-content">
+            <div class="description {{#if trophy.hidden}}gm-visible{{/if}}">
                 {{#if isGM}}
-                    {{trophy.title}}
-                    {{#if trophy.hidden}}<span class="hidden-label">🔒 Caché</span>{{/if}}
+                    {{trophy.description}}
+                    {{#if trophy.hideDescription}}
+                        <span class="hidden-label-description">📜 Description masquée</span>
+                    {{/if}}
                 {{else}}
                     {{#if trophy.hidden}}
-                        <i>🔒 Caché</i>
+                        <i>🔒 Ce trophée est caché</i>
                     {{else}}
-                        {{trophy.title}}
+                        {{#if trophy.hideDescription}}
+                            <i>🔒 Description cachée</i>
+                        {{else}}
+                            {{trophy.description}}
+                        {{/if}}
                     {{/if}}
                 {{/if}}
-            </h2>
-            <div class="trophy-grade">{{trophy.grade}}</div>
-        </div>
-    </div>
+            </div>
 
-    <div class="trophy-content">
-        <div class="description {{#if trophy.hidden}}gm-visible{{/if}}">
-            {{#if isGM}}
-                {{trophy.description}}
-                {{#if trophy.hideDescription}}
-                    <span class="hidden-label-description">📜 Description masquée</span>
-                {{/if}}
+            {{#if isEditing}}
+                <form class="trophy-edit-form">
+                    <div class="form-group">
+                        <label>Titre</label>
+                        <input type="text" name="title" value="{{trophy.title}}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description">{{trophy.description}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Image URL</label>
+                        <input type="text" name="image" value="{{trophy.image}}">
+                    </div>
+                    <div class="form-group">
+                        <label>Grade</label>
+                        <select name="grade">
+                            {{#each grades}}
+                                <option value="{{this}}" {{#if (eq this ../trophy.grade)}}selected{{/if}}>{{this}}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="hidden" {{#if trophy.hidden}}checked{{/if}}>
+                        <label for="trophy-hidden-detail">Trophée caché</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="hideDescription" {{#if trophy.hideDescription}}checked{{/if}}>
+                        <label for="trophy-hide-description-detail">Cacher la description</label>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" class="save-trophy-btn">
+                            <i class="fas fa-save"></i> Sauvegarder Modification
+                        </button>
+                        <button type="button" class="cancel-edit-btn">
+                            <i class="fas fa-times"></i> Annuler Modification
+                        </button>
+                    </div>
+                </form>
             {{else}}
-                {{#if trophy.hidden}}
-                    <i>🔒 Ce trophée est caché</i>
-                {{else}}
-                    {{#if trophy.hideDescription}}
-                        <i>🔒 Description cachée</i>
-                    {{else}}
-                        {{trophy.description}}
-                    {{/if}}
-                {{/if}}
+                <button class="edit-trophy-btn">
+                    <i class="fas fa-edit"></i> Modifier le trophée
+                </button>
             {{/if}}
-        </div>
 
-        {{#if isGM}}
             <div class="trophy-management">
                 <div class="awarded-players">
                     <h3>Joueurs ayant débloqué ce trophée :</h3>
@@ -68,57 +114,12 @@
                     <button class="award-trophy-btn" data-id="{{trophy.id}}">Attribuer</button>
                 </div>
 
-                {{#if isEditing}}
-            <form class="trophy-edit-form">
-                <div class="form-group">
-                    <label>Titre</label>
-                    <input type="text" name="title" value="{{trophy.title}}" required>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea name="description">{{trophy.description}}</textarea>
-                </div>
-                <div class="form-group">
-                    <label>Image URL</label>
-                    <input type="text" name="image" value="{{trophy.image}}">
-                </div>
-                <div class="form-group">
-                    <label>Grade</label>
-                    <select name="grade">
-                        {{#each grades}}
-                            <option value="{{this}}" {{#if (eq this ../trophy.grade)}}selected{{/if}}>{{this}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-                <div class="form-group">
-                        <input type="checkbox" name="hidden" {{#if trophy.hidden}}checked{{/if}}>
-                        <label for="trophy-hidden">Trophée caché</label>
-                </div>
-                <div class="form-group">
-                        <input type="checkbox" name="hideDescription" {{#if trophy.hideDescription}}checked{{/if}}>
-                        <label for="trophy-hide-description">Cacher la description</label>
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="save-trophy-btn">
-                        <i class="fas fa-save"></i> Sauvegarder Modification
-                    </button>
-                    <button type="button" class="cancel-edit-btn">
-                        <i class="fas fa-times"></i> Annuler Modification
-                    </button>
-                </div>
-            </form>
-        {{else}}
-            <button class="edit-trophy-btn">
-                <i class="fas fa-edit"></i> Modifier
-            </button>
-        {{/if}}
-    {{/if}}
                 <div class="delete-controls">
                     <button class="delete-trophy-btn" data-id="{{trophy.id}}">
                         <i class="fas fa-trash"></i> Supprimer le trophée
                     </button>
                 </div>
             </div>
-        {{/if}}
-    </div>
+        </div>
+    {{/if}}
 </div>
