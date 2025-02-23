@@ -142,5 +142,39 @@ export class TrophyDetail extends Application {
                 }
             });
         }
+
+        // Écouter les changements d'utilisateurs
+        Hooks.on("userConnected", () => this.updatePlayerList());
+        Hooks.on("userDisconnected", () => this.updatePlayerList());
+    }
+
+    async updatePlayerList() {
+        const select = this.element.find(`#award-player-detail-${this.trophy.id}`);
+        if (!select.length) return;
+
+        // Récupérer la liste mise à jour des utilisateurs
+        const users = game.users.filter(u => u.active);
+        
+        // Sauvegarder la sélection actuelle
+        const currentSelection = select.val();
+
+        // Mettre à jour les options
+        select.empty();
+        users.forEach(user => {
+            const option = $(`<option value="${user.id}">${user.name}</option>`);
+            select.append(option);
+        });
+
+        // Restaurer la sélection si possible
+        if (users.some(u => u.id === currentSelection)) {
+            select.val(currentSelection);
+        }
+    }
+
+    close(options={}) {
+        // Nettoyer les hooks lors de la fermeture
+        Hooks.off("userConnected", this.updatePlayerList);
+        Hooks.off("userDisconnected", this.updatePlayerList);
+        return super.close(options);
     }
 }
