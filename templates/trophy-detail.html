@@ -1,54 +1,5 @@
 <div class="trophy-detail">
     {{#if isGM}}
-        {{#if isEditing}}
-            <form class="trophy-edit-form">
-                <div class="form-group">
-                    <label>Titre</label>
-                    <input type="text" name="title" value="{{trophy.title}}" required>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea name="description">{{trophy.description}}</textarea>
-                </div>
-                <div class="form-group">
-                    <label>Image URL</label>
-                    <input type="text" name="image" value="{{trophy.image}}">
-                </div>
-                <div class="form-group">
-                    <label>Grade</label>
-                    <select name="grade">
-                        {{#each grades}}
-                            <option value="{{this}}" {{#if (eq this ../trophy.grade)}}selected{{/if}}>{{this}}</option>
-                        {{/each}}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" name="hidden" {{#if trophy.hidden}}checked{{/if}}>
-                        Trophée caché
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" name="hideDescription" {{#if trophy.hideDescription}}checked{{/if}}>
-                        Cacher la description
-                    </label>
-                </div>
-                <div class="form-buttons">
-                    <button type="submit" class="save-trophy-btn">
-                        <i class="fas fa-save"></i> Sauvegarder
-                    </button>
-                    <button type="button" class="cancel-edit-btn">
-                        <i class="fas fa-times"></i> Annuler
-                    </button>
-                </div>
-            </form>
-        {{else}}
-            <button class="edit-trophy-btn">
-                <i class="fas fa-edit"></i> Modifier
-            </button>
-        {{/if}}
-    {{/if}}
     <div class="trophy-header {{trophy.grade}}">
         <img src="{{trophy.image}}" class="{{#if trophy.hidden}}blurred{{/if}}" />
         <div class="trophy-info">
@@ -117,6 +68,51 @@
                     <button class="award-trophy-btn" data-id="{{trophy.id}}">Attribuer</button>
                 </div>
 
+                {{#if isEditing}}
+            <form class="trophy-edit-form">
+                <div class="form-group">
+                    <label>Titre</label>
+                    <input type="text" name="title" value="{{trophy.title}}" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description">{{trophy.description}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" name="image" value="{{trophy.image}}">
+                </div>
+                <div class="form-group">
+                    <label>Grade</label>
+                    <select name="grade">
+                        {{#each grades}}
+                            <option value="{{this}}" {{#if (eq this ../trophy.grade)}}selected{{/if}}>{{this}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+                <div class="form-group">
+                        <input type="checkbox" name="hidden" {{#if trophy.hidden}}checked{{/if}}>
+                        <label for="trophy-hidden">Trophée caché</label>
+                </div>
+                <div class="form-group">
+                        <input type="checkbox" name="hideDescription" {{#if trophy.hideDescription}}checked{{/if}}>
+                        <label for="trophy-hide-description">Cacher la description</label>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="save-trophy-btn">
+                        <i class="fas fa-save"></i> Sauvegarder Modification
+                    </button>
+                    <button type="button" class="cancel-edit-btn">
+                        <i class="fas fa-times"></i> Annuler Modification
+                    </button>
+                </div>
+            </form>
+        {{else}}
+            <button class="edit-trophy-btn">
+                <i class="fas fa-edit"></i> Modifier
+            </button>
+        {{/if}}
+    {{/if}}
                 <div class="delete-controls">
                     <button class="delete-trophy-btn" data-id="{{trophy.id}}">
                         <i class="fas fa-trash"></i> Supprimer le trophée

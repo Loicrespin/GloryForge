@@ -73,6 +73,22 @@ button {
     margin-top: 5%;
 }
 
+.form-buttons .save-trophy-btn {
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.form-buttons .cancel-edit-btn {
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
 /* Icône pour signaler que la description est cachée */
 .hidden-label {
     font-size: 14px;
